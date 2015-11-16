@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Abareza Geofencing API test dashboard</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+    <script>
+    $(function() {
+        var map = undefined;
+
+        function init_map() {
+            var athens = {lat: 37.966, lng: 23.72};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: athens
+            });
+        }
+        window.initMap = init_map;
+
+        window.UserManager = {
+            users: [],
+
+            add: function(user) {
+                this.users.push(user)
+            },
+
+            update: function(id, p) {
+                for (var i=0; i<this.users.length; i++) {
+                    if (this.users[i].id == id) {
+                        this.users[i].position = p;
+
+                        //move the marker
+                        this.users[i].marker.setPosition(p);
+
+                        return;
+                    }
+                }
+            },
+
+            highlight: function(id) {
+                for (var i=0; i<this.users.length; i++) {
+                    if (this.users[i].id == id) {
+                        this.users[i].marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+
+                        return;
+                    }
+                }
+            },
+
+            plain: function(id) {
+                for (var i=0; i<this.users.length; i++) {
+                    if (this.users[i].id == id) {
+                        this.users[i].marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
+
+                        return;
+                    }
+                }
+            },
+        };
+
+        $.ajax({
+            url: '/api/users/',
+            method: 'GET',
+
+            success: function(data) {
+                for(var p=0; p<data.length; p++) {
+                    var u = data[p];
+
+                    var marker = new google.maps.Marker({
+                        position: u.position,
+                        map: map,
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                    });
+
+                    UserManager.add({id: u.id, position:u.position, marker: marker});
+                }
+            }
+        });
+
+        setInterval(function() {
+            $.ajax({
+                url: '/api/users/',
+                method: 'GET',
+
+                success: function(data) {
+                    for(var p=0; p<data.length; p++) {
+                        var u = data[p];
+                        UserManager.update(u.id, u.position);
+                    }
+                }
+            });
+        }, 1000);
+
+        setTimeout(function() {
+            //Add listener
+            google.maps.event.addListener(map, "click", function (event) {
+                var lat = event.latLng.lat();
+                var lng = event.latLng.lng();
+
+                $.ajax({
+                    url: 'api/users/in-group/?lat=' + lat + '&lng=' + lng,
+                    method: 'GET',
+
+                    success: function(data) {
+                        for(var p=0; p<data.length; p++) {
+                            var u = data[p];
+                            UserManager.highlight(u.id);
+                        }
+
+                        setTimeout(function() {
+                            for(var p=0; p<data.length; p++) {
+                                var u = data[p];
+                                UserManager.plain(u.id);
+                            }
+                        }, 3000);
+                    }
+                });
+            });
+        }, 1000);
+    });
+    </script>
+  </body>
+</html>

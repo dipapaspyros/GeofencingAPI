@@ -1,0 +1,15 @@
+*.iml
+
+*.ids
+
+*.pyc
+
+.idea
+.idea/*
+
+migrations
+migrations/*
+
+/*.sqlite3
+
+passwords.py
