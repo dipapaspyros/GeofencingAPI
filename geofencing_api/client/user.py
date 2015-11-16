@@ -3,7 +3,7 @@ from random import randint
 from time import sleep
 from uuid import uuid4
 from math import sin, cos, sqrt
-from location_app.geofencing_api.client.util.point import Point
+from geofencing_api.client.util.point import Point
 from util.boundary import Boundary
 from util.points_of_interest import PointsOfInterest
 

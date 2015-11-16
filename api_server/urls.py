@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from location_app.geofencing_api import views
-from location_app.geofencing_api.api import graphs, clients
+from geofencing_api import views
+from geofencing_api.api import graphs, clients
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),

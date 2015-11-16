@@ -2,10 +2,10 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 import threading
-from location_app.geofencing_api.client.user import UserBase
+from geofencing_api.client.user import UserBase
 
 # create user base
-from location_app.api_server.settings import DEBUG
+from api_server.settings import DEBUG
 
 if DEBUG:
     # simulate users

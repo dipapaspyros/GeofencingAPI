@@ -1,5 +1,5 @@
 from random import randint
-from location_app.geofencing_api.client.util.point import Point
+from geofencing_api.client.util.point import Point
 
 __author__ = 'dipap'
 

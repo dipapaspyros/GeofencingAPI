@@ -3,7 +3,7 @@ import uuid
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from location_app.geofencing_api.views import user_base
+from geofencing_api.views import user_base
 
 __author__ = 'dipap'
 
