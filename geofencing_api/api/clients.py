@@ -23,9 +23,9 @@ def clients(request):
 def client(request, pk):
     if request.method == 'POST':
         try:
-            x = float(request.GET.get('lat'))
-            y = float(request.GET.get('lng'))
-        except ValueError:
+            x = float(request.POST.get('lat'))
+            y = float(request.POST.get('lng'))
+        except TypeError:
             return JsonResponse({'error': 'lat,lng coordinate arguments are required' % request.method}, status=403)
 
         user = user_base.get_user(pk)
