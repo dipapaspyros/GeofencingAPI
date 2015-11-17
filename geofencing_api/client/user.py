@@ -4,6 +4,7 @@ from time import sleep
 from uuid import uuid4
 from math import sin, cos, sqrt
 
+import math
 from django.utils.timezone import now
 from geofencing_api.client.util.point import Point
 from util.boundary import Boundary
@@ -51,14 +52,21 @@ class User:
         t = now()
 
         if self.updated_at:
+            # calculate speed
             dx = self.distance_from(p2)
             dt = t - self.updated_at
             self.speed = dx/dt
+            # calculate direction
+            dx, dy = x - self.p.x, y - self.p.y
+            self.f = math.atan2(dx/dy)
 
         self.p = p2
         self.updated_at = t
 
     def iteration(self):
+        if self.speed == 0:
+            return
+
         # The user moves according to their latest speed
         if self.type:
             if self.type == 'Car':
