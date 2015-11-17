@@ -16,7 +16,7 @@ class UserNotFound(Exception):
 
 class User:
 
-    def __init__(self, points_of_interest, uid=None):
+    def __init__(self, points_of_interest=None, uid=None):
         if uid:
             self.id = uid
             self.type = None
@@ -121,7 +121,9 @@ class UserBase:
             if u.id == uid:
                 return u
 
-        raise UserNotFound
+        u = User(uid=uid)
+        self.users.append(u)
+        return u
 
     def update(self, uid, x, y):
         u = self.get_user(uid)
