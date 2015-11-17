@@ -3,6 +3,8 @@ from random import randint
 from time import sleep
 from uuid import uuid4
 from math import sin, cos, sqrt
+
+from django.utils.timezone import now
 from geofencing_api.client.util.point import Point
 from util.boundary import Boundary
 from util.points_of_interest import PointsOfInterest
